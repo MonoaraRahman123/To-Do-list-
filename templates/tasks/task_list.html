@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}To-Do List - SMS{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">My To-Do List</h5>
+        <a href="{% url 'task_add' %}" class="btn btn-light btn-sm">Add New Task</a>
+    </div>
+    <div class="card-body">
+        <div class="mb-4">
+            <a href="{% url 'task_list' %}" class="btn btn-sm btn-{% if not status %}primary{% else %}outline-primary{% endif %}">All</a>
+            <a href="?status=pending" class="btn btn-sm btn-{% if status == 'pending' %}primary{% else %}outline-primary{% endif %}">Pending</a>
+            <a href="?status=completed" class="btn btn-sm btn-{% if status == 'completed' %}primary{% else %}outline-primary{% endif %}">Completed</a>
+        </div>
+
+        <div class="list-group">
+            {% for task in page_obj %}
+                <div class="list-group-item d-flex justify-content-between align-items-start mb-2 border rounded shadow-sm">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">
+                            {% if task.is_completed %}<del class="text-muted">{% endif %}
+                            {{ task.title }}
+                            {% if task.is_completed %}</del>{% endif %}
+                        </div>
+                        <p class="mb-1 text-muted small">{{ task.description|truncatechars:100 }}</p>
+                        <small class="text-primary">
+                            <i class="bi bi-calendar"></i> Due: {{ task.due_date|default:"No date" }}
+                        </small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a href="{% url 'task_toggle' task.pk %}" class="btn btn-sm btn-{% if task.is_completed %}warning{% else %}success{% endif %} me-2">
+                            <i class="bi bi-{% if task.is_completed %}arrow-counterclockwise{% else %}check-lg{% endif %}"></i>
+                        </a>
+                        <a href="{% url 'task_edit' task.pk %}" class="btn btn-sm btn-outline-info me-2"><i class="bi bi-pencil"></i></a>
+                        <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="text-center py-4">
+                    <p class="text-muted">No tasks found.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status %}&status={{ status }}{% endif %}">Previous</a></li>
+                    {% endif %}
+                    
+                    {% for i in page_obj.paginator.page_range %}
+                        <li class="page-item {% if page_obj.number == i %}active{% endif %}">
+                            <a class="page-link" href="?page={{ i }}{% if status %}&status={{ status }}{% endif %}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status %}&status={{ status }}{% endif %}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

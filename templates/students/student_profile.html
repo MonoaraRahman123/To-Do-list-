@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - SMS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Student Profile</h5>
+            </div>
+            <div class="card-body">
+                {% if student %}
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Full Name:</div>
+                        <div class="col-sm-8"><h5>{{ student.name }}</h5></div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Student ID:</div>
+                        <div class="col-sm-8 text-primary font-weight-bold">{{ student.student_id }}</div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Department:</div>
+                        <div class="col-sm-8">{{ student.department }}</div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Email Address:</div>
+                        <div class="col-sm-8">{{ student.email }}</div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Phone Number:</div>
+                        <div class="col-sm-8">{{ student.phone }}</div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 font-weight-bold text-muted">Address:</div>
+                        <div class="col-sm-8">{{ student.address }}</div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        Your profile has not been set up yet. Please contact the administrator.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
